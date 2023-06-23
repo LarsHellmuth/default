@@ -1,0 +1,50 @@
+{
+  "name": "default",
+  "version": "0.8.15",
+  "author": "laas",
+  "license": "UNLICENSED",
+  "description": "some kind of desktop/workbench",
+  "browserslist": "cover 99% and last 2 versions and last 1 years",
+  "engines": { "node": "current node" },
+  "scripts": {
+    "watch": "tsc --watch",
+    "serve": "vite serve",
+    "preview": "npm ci && vite optimize && vite preview --debug",
+    "build": "npm ci && vite optimize && vite build --emptyOutDir"
+  },
+  "eslintConfig": {
+    "root": true,
+    "env": {
+      "node": true,
+      "browser": true
+    },
+    "extends": [
+      "eslint:recommended",
+      "plugin:@typescript-eslint/strict",
+      "plugin:@typescript-eslint/recommended"
+    ],
+    "parser": "@typescript-eslint/parser",
+    "parserOptions": {
+      "ecmaVersion": "latest",
+      "sourceType": "module",
+      "project": "tsconfig.json"
+    },
+    "plugins": [
+      "@typescript-eslint"
+    ],
+    "rules": {
+      "comma-dangle": 1,
+      "semi": [ 1, "never" ]
+    },
+    "ignorePatterns": [ "pub", "dist" ]
+  },
+  "devDependencies": {
+    "@types/three": "^0.152.1",
+    "@typescript-eslint/eslint-plugin": "^5.60.0",
+    "@typescript-eslint/parser": "^5.60.0",
+    "eslint": "^8.43.0",
+    "three": "^0.153.0",
+    "typescript": "^5.1.3",
+    "vite": "^4.3.9"
+  }
+}

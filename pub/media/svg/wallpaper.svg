@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100% 100%">
+    <defs>
+        <filter id="wallpaper">
+            <feTurbulence type="turbulence"
+                baseFrequency="0.002"
+                numOctaves="8"
+                result="turbulence" />
+            <feSpecularLighting
+                in="turbulence"
+                surfaceScale="22"
+                specularExponent="11"
+                lighting-color="rgb(255, 125, 125)">
+                <feDistantLight
+                    azimuth="90"
+                    elevation="80" />
+                <animate attributeName="surfaceScale" dur="999ms"
+                    from="11" to="22" fill="freeze" />
+            </feSpecularLighting>
+        </filter>
+    </defs>
+
+    <rect width="100%" height="100%" filter="url(#wallpaper)" />
+</svg>

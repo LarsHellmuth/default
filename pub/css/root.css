@@ -1,0 +1,38 @@
+:root {
+
+    --base-width: clamp(1rem, 1vw, 2rem);
+
+    --spacer: var(--base-width);
+    --spacer-s: calc(var(--spacer) / 2);
+    --spacer-l: calc(var(--spacer) * 2);
+    --spacer-xs: calc(var(--spacer-s) / 2);
+    --spacer-xl: calc(var(--spacer-l) * 2);
+
+    --grey-100: rgba(199, 199, 199, 1.0);
+    --grey-070: rgba(199, 199, 199, 0.7);
+    --grey-040: rgba(199, 199, 199, 0.4);
+    --grey-010: rgba(199, 199, 199, 0.1);
+
+    --pink-100: rgba(255, 125, 125, 1.0);
+    --pink-070: rgba(255, 125, 125, 0.7);
+    --pink-040: rgba(255, 125, 125, 0.4);
+    --pink-010: rgba(255, 125, 125, 0.1);
+
+    --lime-100: rgba(133, 222, 111, 1.0);
+    --lime-070: rgba(133, 222, 111, 0.7);
+    --lime-040: rgba(133, 222, 111, 0.4);
+    --lime-010: rgba(133, 222, 111, 0.1);
+
+    color: #333;
+
+    --h1: calc(var(--base-width) * 1.618 * 2);
+    --h2: calc(var(--base-width) * 1.618 * 1);
+    --h3: calc(var(--base-width) * 1.618 / 2);
+
+    font-size: var(--base-width);
+    font-family: Special Elite, monospace;
+    line-height: 1;
+
+    --transition: cubic-bezier(0, 0.4, 1, 0.8);
+
+}

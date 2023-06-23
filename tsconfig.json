@@ -1,0 +1,29 @@
+{
+    "include": [
+        "src",
+    ],
+    "compilerOptions": {
+        "outDir": "pub",
+        "target": "ESNext",
+        "module": "ESNext",
+        "moduleResolution": "nodenext",
+        "resolveJsonModule": true,
+        "isolatedModules": true,
+        "sourceMap": false,
+        "allowJs": true,
+        "checkJs": true,
+        "strict": true,
+        "diagnostics": false,
+        "extendedDiagnostics": false,
+    },
+    "typeAcquisition": {
+        "enable": true,
+    },
+    "buildOptions": {
+        "verbose": true,
+        "traceResolution": true,
+    },
+    "watchOptions": {
+        "fallbackPolling": "dynamicPriority",
+    },
+}

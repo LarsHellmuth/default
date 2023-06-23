@@ -1,0 +1,9 @@
+@media (orientation: landscape) {
+
+    :root {
+
+        --padding-box: 16%;
+
+    }
+
+}

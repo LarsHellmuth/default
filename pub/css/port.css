@@ -1,0 +1,9 @@
+@media (orientation: portrait) {
+
+    :root {
+
+        --padding-box: 8%;
+
+    }
+
+}
