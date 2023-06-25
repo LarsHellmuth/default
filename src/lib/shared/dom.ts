@@ -1,71 +1,64 @@
-import { camera, renderer, scene } from "../background/index"
-import { limit } from "./tools"
+import { addObj, render, renderer } from "../background/index"
 
 
 
-export const
+const
 
     root = window,
-
     html = document.documentElement,
     body = document.body,
     main = body.querySelector("main"),
     header = body.querySelector("header"),
     footer = body.querySelector("footer"),
 
-    canvas = body.insertBefore(renderer.domElement, body.firstElementChild)
+    canvas = body.insertBefore(renderer.domElement, body.firstElementChild),
+    canvasWidth = canvas.offsetWidth,
+    canvasHeight = canvas.offsetHeight
+
+export { footer, header, main, root }
 
 
-let
+addEventListener("load", () => {
 
-    width = innerWidth,
-    height = innerHeight;
-
-
-/* mobile / dektop detection */
-/Mobile|Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini|webOS/i
-    .test(navigator.userAgent)
-    ? html.setAttribute('device', 'mobile')
-    : html.setAttribute('device', 'desktop')
+    /* mobile / dektop detection */
+    /Mobile|Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini|webOS/i
+        .test(navigator.userAgent)
+        ? html.setAttribute('device', 'mobile')
+        : html.setAttribute('device', 'desktop')
 
 
-addEventListener("wheel", event => {
+    let x = canvasWidth * 0.1 | 0
+    while (x-- > 0) {
+
+        let y = canvasHeight * 0.1 | 0
+        while (y-- > 0) addObj(x, y)
+    }
+
+    render()
+
+})
+
+
+/* addEventListener("wheel", event => {
 
     limit(() => {
 
-        if (event.deltaX > 0) camera.position.x += 1
-        if (event.deltaX < 0) camera.position.x -= 1
-        if (event.deltaY > 0) camera.position.y += 1
-        if (event.deltaY < 0) camera.position.y -= 1
-        if (event.deltaZ > 0) camera.position.z += 1
-        if (event.deltaZ < 0) camera.position.z -= 1
+        if (event.deltaX > 0) camera.position.x += 8
+        if (event.deltaX < 0) camera.position.x -= 8
+        if (event.deltaY > 0) camera.position.y += 4
+        if (event.deltaY < 0) camera.position.y -= 4
+        if (event.deltaZ > 0) camera.position.z += 2
+        if (event.deltaZ < 0) camera.position.z -= 2
 
-    }, { throttle: 40 })
+        if (event.deltaX > 0) light.position.x += 1
+        if (event.deltaX < 0) light.position.x -= 1
+        if (event.deltaY > 0) light.position.y += 1
+        if (event.deltaY < 0) light.position.y -= 1
+        if (event.deltaZ > 0) light.position.z += 1
+        if (event.deltaZ < 0) light.position.z -= 1
 
-    camera.lookAt(0, 0, 0)
-    renderer.render(scene, camera)
-})
+        render()
 
+    }, { throttle: 0 })
 
-addEventListener("resize", () => {
-
-    limit(() => {
-
-        if (width !== innerWidth || height !== innerHeight) {
-
-            width = innerWidth
-            height = innerHeight
-
-            renderer.setSize(width, height, true)
-        }
-
-    }, { debounce: 200 })
-
-})
-
-
-addEventListener("beforeunload", () => {
-
-    sessionStorage.data = JSON.stringify({})
-
-})
+}) */

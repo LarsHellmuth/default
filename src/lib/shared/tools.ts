@@ -1,3 +1,6 @@
+
+
+
 /* performance helper */
 let throttling: boolean,
     debouncing: number
@@ -14,6 +17,7 @@ const limit = (callback: TimerHandler, { throttle = 0, debounce = 0 } = {}) => {
         throttling = false
 
     }, throttle)
+
 }
 
 

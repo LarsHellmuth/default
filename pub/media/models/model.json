@@ -1,0 +1,114 @@
+{
+	"metadata": {
+		"version": 4.6,
+		"type": "Object",
+		"generator": "Object3D.toJSON"
+	},
+	"geometries": [
+		{
+			"uuid": "bb16844e-fb17-4bac-965c-32c974a67a5f",
+			"type": "SphereGeometry",
+			"radius": 1,
+			"widthSegments": 33,
+			"heightSegments": 33,
+			"phiStart": 0,
+			"phiLength": 3.141592653589793,
+			"thetaStart": 0,
+			"thetaLength": 3.141592653589793
+		},
+		{
+			"uuid": "ef49629a-b37e-448b-af3e-ec499020f48a",
+			"type": "SphereGeometry",
+			"radius": 0.9,
+			"widthSegments": 33,
+			"heightSegments": 33,
+			"phiStart": 0,
+			"phiLength": 6.283185307179586,
+			"thetaStart": 0,
+			"thetaLength": 3.141592653589793
+		}],
+	"materials": [
+		{
+			"uuid": "0ab354fc-d4a9-489c-9f36-b22f6a0b8706",
+			"type": "MeshPhongMaterial",
+			"color": 2303,
+			"emissive": 0,
+			"specular": 16777215,
+			"shininess": 30,
+			"reflectivity": 1,
+			"refractionRatio": 0.98,
+			"depthFunc": 3,
+			"depthTest": true,
+			"depthWrite": true,
+			"colorWrite": true,
+			"stencilWrite": false,
+			"stencilWriteMask": 255,
+			"stencilFunc": 519,
+			"stencilRef": 0,
+			"stencilFuncMask": 255,
+			"stencilFail": 7680,
+			"stencilZFail": 7680,
+			"stencilZPass": 7680
+		},
+		{
+			"uuid": "fae21ec4-945c-4bb7-9066-831b7f76e993",
+			"type": "MeshPhongMaterial",
+			"color": 16711680,
+			"emissive": 0,
+			"specular": 16777215,
+			"shininess": 30,
+			"reflectivity": 1,
+			"refractionRatio": 0.98,
+			"depthFunc": 3,
+			"depthTest": true,
+			"depthWrite": true,
+			"colorWrite": true,
+			"stencilWrite": false,
+			"stencilWriteMask": 255,
+			"stencilFunc": 519,
+			"stencilRef": 0,
+			"stencilFuncMask": 255,
+			"stencilFail": 7680,
+			"stencilZFail": 7680,
+			"stencilZPass": 7680
+		}],
+	"object": {
+		"uuid": "7da84810-6a7d-4d35-b213-25dc5dff5447",
+		"type": "Scene",
+		"name": "Scene",
+		"layers": 1,
+		"matrix": [1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1],
+		"up": [0,1,0],
+		"children": [
+			{
+				"uuid": "7d43226d-72d6-4a56-9484-6e3161d5ecd6",
+				"type": "Mesh",
+				"name": "Sphere",
+				"layers": 1,
+				"matrix": [1,0,0,0,0,2.220446049250313e-16,1,0,0,-1,2.220446049250313e-16,0,0,0,0,1],
+				"up": [0,1,0],
+				"geometry": "bb16844e-fb17-4bac-965c-32c974a67a5f",
+				"material": "0ab354fc-d4a9-489c-9f36-b22f6a0b8706"
+			},
+			{
+				"uuid": "0c1235bc-80dc-4ab3-bdab-70f1cfe9faaa",
+				"type": "Mesh",
+				"name": "Sphere",
+				"layers": 1,
+				"matrix": [1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1],
+				"up": [0,1,0],
+				"geometry": "ef49629a-b37e-448b-af3e-ec499020f48a",
+				"material": "fae21ec4-945c-4bb7-9066-831b7f76e993"
+			},
+			{
+				"uuid": "e94ab546-8fae-4af6-9f10-95809f400a39",
+				"type": "AmbientLight",
+				"name": "AmbientLight",
+				"layers": 1,
+				"matrix": [1,0,0,0,0,1,0,0,0,0,1,0,2,2,2,1],
+				"up": [0,1,0],
+				"color": 16777215,
+				"intensity": 1
+			}]
+	}
+}
