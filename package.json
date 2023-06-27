@@ -9,8 +9,8 @@
   "scripts": {
     "watch": "tsc --watch",
     "serve": "vite serve",
-    "preview": "npm ci && vite optimize && vite preview --debug",
-    "build": "npm ci && vite optimize && vite build --emptyOutDir"
+    "build": "npm ci && vite optimize && vite build --emptyOutDir",
+    "preview": "npm ci && vite optimize && vite preview --debug"
   },
   "eslintConfig": {
     "root": true,

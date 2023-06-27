@@ -1,31 +1,45 @@
-import { BoxGeometry, CircleGeometry, Mesh, MeshBasicMaterial, MeshStandardMaterial, Object3D, PerspectiveCamera, PointLight, Scene, WebGLRenderer } from "three"
-import { FPS, PERCENT, limit, randomAlpha, randomColor } from "../shared/tools"
+import { BoxGeometry, Mesh, MeshBasicMaterial, MeshStandardMaterial, PerspectiveCamera, PointLight, Scene, SphereGeometry, WebGLRenderer } from "three"
+import { OrbitControls } from "three/addons/controls/OrbitControls.js"
+import { FPS, PERCENT, limit, randomColor } from "../shared/tools"
 
 
 let width = innerWidth,
     height = innerHeight
 
+
 const
 
+    body = document.body,
+
     seneBox = new Mesh(
-        new BoxGeometry(width, height),
-        new MeshBasicMaterial({ wireframe: true })),
+        new BoxGeometry(width, height, 0),
+        new MeshBasicMaterial({ wireframe: true })
+    ),
 
-    light = new PointLight(),
-    scene = new Scene().add(light).add(seneBox),
+    light = new PointLight(
+        "white", //color
+        1, // intensity
+        0, // distance
+        2  // decay
+    ),
 
-    fov = undefined, aspect = width / height,
-    camera = new PerspectiveCamera(fov, aspect),
+    scene = new Scene()
+        .add(seneBox)
+        .add(light),
 
-    renderer = new WebGLRenderer({ alpha: true })
+    renderer = new WebGLRenderer({ alpha: true }),
+    canvas = body.insertBefore(renderer.domElement, body.firstElementChild),
+    camera = new PerspectiveCamera(50),
+    controls = new OrbitControls(camera, canvas)
 
-light.position.set(0, 0, 99)
-scene.position.set(0, 0, -20)
+
+light.position.set(0, 0, 9)
+
+camera.position.set(0, 0, 10)
+camera.lookAt(0, 0, 0)
 
 renderer.setSize(width, height, true)
 renderer.setPixelRatio(devicePixelRatio)
-
-export { renderer }
 
 
 width = 0, height = 0
@@ -33,7 +47,7 @@ width = 0, height = 0
 let objectsOnX = 0 | PERCENT * width,
     objectsOnY = 0 | PERCENT * height,
 
-    objects = objectsOnX * objectsOnY
+    objectsMax = objectsOnX * objectsOnY
 
 const render = (): void => {
 
@@ -46,7 +60,7 @@ const render = (): void => {
             objectsOnX = 0 | PERCENT * width
             objectsOnY = 0 | PERCENT * height
 
-            objects = objectsOnX * objectsOnY
+            objectsMax = objectsOnX * objectsOnY
 
             let x = objectsOnX
             while (x-- > 0) {
@@ -54,7 +68,7 @@ const render = (): void => {
                 let y = objectsOnY
                 while (y-- > 0)
 
-                    sceneObjectAdd(x, y)
+                    addObject(x, y)
             }
 
             camera.aspect = width / height
@@ -63,7 +77,10 @@ const render = (): void => {
             renderer.setSize(width, height, true)
         }
 
+        controls.update()
+
         renderer.render(scene, camera)
+        console.log(camera.aspect)
 
     }, { throttle: FPS })
 }
@@ -71,42 +88,50 @@ const render = (): void => {
 
 const
 
-    sceneObjects: number[] = [],
-    sceneObjectAdd = (x: number, y: number): void => {
+    objects: number[] = [],
+
+    addObject = (x: number, y: number): void => {
 
         const mesh = new Mesh(
-            new CircleGeometry(0.8),
+            new SphereGeometry(0.4),
             new MeshStandardMaterial({
-                opacity: randomAlpha(),
-                color: randomColor(),
-                transparent: true
+                /* transparent: true, */
+                /* opacity: randomAlpha(), */
+                emissive: randomColor(),
+                color: "pink",
+                roughness: 0.6,
+                metalness: 0.2
             })
         )
 
         mesh.position.set(
             x - objectsOnX / 2 + PERCENT / x,
             y - objectsOnY / 2 + PERCENT / y,
-            1 * Math.random()
+            0 * Math.random()
         )
 
-        if (sceneObjects.push(mesh.id) <= objects) {
+        if (objects.push(mesh.id) <= objectsMax) {
 
             scene.add(mesh)
 
         } else {
 
-            const meshId: undefined | number = sceneObjects.shift()
+            const meshId = objects.shift()
             if (meshId === undefined) return
 
-            const object: undefined | Object3D = scene.getObjectById(meshId)
+            const object = scene.getObjectById(meshId)
             if (object === undefined) return
 
-            scene.add(mesh)
+            /* scene.add(mesh) */
             scene.remove(object)
         }
-
-        /* console.log(sceneObjects.length) */
     }
 
 
 export { render }
+
+
+addEventListener("resize", () => {
+    console.log("children:" + scene.children.length)
+    console.log(" objects:" + objects.length)
+})
