@@ -22,4 +22,5 @@ addEventListener("resize", render);
     ? html.setAttribute('device', 'mobile')
     : html.setAttribute('device', 'desktop')
 
+
 render()

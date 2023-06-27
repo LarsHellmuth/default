@@ -1,4 +1,4 @@
-// global constants
+// globals
 export const
 
     FPS = 1000 / 60, // 1000ms/60 = 60fps
@@ -6,8 +6,15 @@ export const
 
 
 // performance helper
-let throttling: boolean, debouncing: number
-const limit = (callback: TimerHandler, { throttle = 0, debounce = 0 } = {}) => {
+let debouncing: number,
+    throttling: boolean
+
+const limit = (callback: TimerHandler, {
+
+    debounce = 0,
+    throttle = 0
+
+}): void => {
 
     if (throttling) return
     throttling = true
@@ -19,20 +26,25 @@ const limit = (callback: TimerHandler, { throttle = 0, debounce = 0 } = {}) => {
         throttling = false
 
     }, throttle)
-
 }
 
 
 // random color generator
-const randomColor = () => {
+const randomColor = (): string => {
 
-    const hex = (Math.random() * (256 ** 3) | 0)
+    const color = (Math.random() * (256 ** 3) | 0)
         .toString(16)
         .padStart(6, "0")
 
-    return `#${hex}`
-
+    return `#${color}`
 }
 
 
-export { limit, randomColor }
+// random alpha generator
+const randomAlpha = (min = 0.2, max = 0.8): number => {
+
+    return Math.random() * max + min
+}
+
+
+export { limit, randomAlpha, randomColor }

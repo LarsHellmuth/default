@@ -1,15 +1,9 @@
-import { BoxGeometry, Mesh, MeshBasicMaterial, MeshStandardMaterial, Object3D, PerspectiveCamera, PointLight, Scene, WebGLRenderer } from "three"
-import { FPS, PERCENT, limit } from "../shared/tools"
+import { BoxGeometry, CircleGeometry, Mesh, MeshBasicMaterial, MeshStandardMaterial, Object3D, PerspectiveCamera, PointLight, Scene, WebGLRenderer } from "three"
+import { FPS, PERCENT, limit, randomAlpha, randomColor } from "../shared/tools"
 
 
-let
-
-    width = innerWidth,
-    height = innerHeight,
-
-    cubesOnX = 0 | PERCENT * width,
-    cubesOnY = 0 | PERCENT * height
-
+let width = innerWidth,
+    height = innerHeight
 
 const
 
@@ -25,15 +19,21 @@ const
 
     renderer = new WebGLRenderer({ alpha: true })
 
-export { renderer }
-
-
-light.position.set(0, 0, 4)
+light.position.set(0, 0, 99)
 scene.position.set(0, 0, -20)
 
 renderer.setSize(width, height, true)
 renderer.setPixelRatio(devicePixelRatio)
 
+export { renderer }
+
+
+width = 0, height = 0
+
+let objectsOnX = 0 | PERCENT * width,
+    objectsOnY = 0 | PERCENT * height,
+
+    objects = objectsOnX * objectsOnY
 
 const render = (): void => {
 
@@ -41,8 +41,21 @@ const render = (): void => {
 
         if (width !== innerWidth || height !== innerHeight) {
 
-            cubesOnX = width = innerWidth
-            cubesOnY = height = innerHeight
+            width = innerWidth, height = innerHeight
+
+            objectsOnX = 0 | PERCENT * width
+            objectsOnY = 0 | PERCENT * height
+
+            objects = objectsOnX * objectsOnY
+
+            let x = objectsOnX
+            while (x-- > 0) {
+
+                let y = objectsOnY
+                while (y-- > 0)
+
+                    sceneObjectAdd(x, y)
+            }
 
             camera.aspect = width / height
             camera.updateProjectionMatrix()
@@ -50,47 +63,33 @@ const render = (): void => {
             renderer.setSize(width, height, true)
         }
 
-        limit(() => {
-
-            let x = cubesOnX
-            while (x-- > 0) {
-
-                let y = cubesOnY
-                while (y-- > 0)
-
-                    sceneObjectAdd(x, y)
-            }
-
-        }, { debounce: FPS / 0.5 })
-
-        console.log(`rendering...`)
         renderer.render(scene, camera)
 
     }, { throttle: FPS })
-
-    /* console.log(scene) */
 }
 
 
 const
 
     sceneObjects: number[] = [],
-    sceneObjectsMax = cubesOnX * cubesOnY,
-
     sceneObjectAdd = (x: number, y: number): void => {
 
         const mesh = new Mesh(
-            new BoxGeometry(0.9, 0.9),
-            new MeshStandardMaterial({ /* color: randomColor() */ })
+            new CircleGeometry(0.8),
+            new MeshStandardMaterial({
+                opacity: randomAlpha(),
+                color: randomColor(),
+                transparent: true
+            })
         )
 
         mesh.position.set(
-            x - cubesOnX / 2 + PERCENT / x,
-            y - cubesOnY / 2 + PERCENT / y,
-            2 * Math.random()
+            x - objectsOnX / 2 + PERCENT / x,
+            y - objectsOnY / 2 + PERCENT / y,
+            1 * Math.random()
         )
 
-        if (sceneObjects.push(mesh.id) <= sceneObjectsMax) {
+        if (sceneObjects.push(mesh.id) <= objects) {
 
             scene.add(mesh)
 
@@ -105,6 +104,8 @@ const
             scene.add(mesh)
             scene.remove(object)
         }
+
+        /* console.log(sceneObjects.length) */
     }
 
 
