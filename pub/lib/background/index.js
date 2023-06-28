@@ -1,25 +1,34 @@
 import { BoxGeometry, Mesh, MeshBasicMaterial, MeshStandardMaterial, PerspectiveCamera, PointLight, Scene, SphereGeometry, WebGLRenderer } from "three";
-import { OrbitControls } from "three/addons/controls/OrbitControls.js";
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { FPS, PERCENT, limit, randomColor } from "../shared/tools";
-let width = innerWidth, height = innerHeight;
-const body = document.body, seneBox = new Mesh(new BoxGeometry(width, height, 0), new MeshBasicMaterial({ wireframe: true })), light = new PointLight("white", //color
-1, // intensity
-0, // distance
-2 // decay
-), scene = new Scene()
+const body = document.body, renderer = new WebGLRenderer({
+    preserveDrawingBuffer: true,
+    antialias: true,
+    alpha: true
+}), canvas = body.insertBefore(renderer.domElement, body.firstElementChild), camera = new PerspectiveCamera(undefined, // fov
+undefined, // aspect
+undefined, // near
+undefined // far
+), light = new PointLight(undefined, //color
+undefined, // intensity
+undefined, // distance
+undefined // decay
+), seneBox = new Mesh(new BoxGeometry(innerWidth, innerHeight, 0), new MeshBasicMaterial({ wireframe: true })), scene = new Scene()
     .add(seneBox)
-    .add(light), renderer = new WebGLRenderer({ alpha: true }), canvas = body.insertBefore(renderer.domElement, body.firstElementChild), camera = new PerspectiveCamera(50), controls = new OrbitControls(camera, canvas);
-light.position.set(0, 0, 9);
-camera.position.set(0, 0, 10);
-camera.lookAt(0, 0, 0);
-renderer.setSize(width, height, true);
+    .add(light), controls = new OrbitControls(camera, canvas);
 renderer.setPixelRatio(devicePixelRatio);
-width = 0, height = 0;
-let objectsOnX = 0 | PERCENT * width, objectsOnY = 0 | PERCENT * height, objectsMax = objectsOnX * objectsOnY;
+camera.position.set(0, 0, (camera.fov * (innerHeight / innerWidth)) * 0.8);
+camera.lookAt(0, 0, 0);
+light.position.z = 9;
+controls.enableDamping = true;
+controls.target.set(0, 0, 0);
+controls.update();
+let width, height, objectsOnX, objectsOnY, objectsMax;
 const render = () => {
     limit(() => {
-        if (width !== innerWidth || height !== innerHeight) {
-            width = innerWidth, height = innerHeight;
+        if (innerWidth !== width || innerHeight !== height) {
+            width = innerWidth;
+            height = innerHeight;
             objectsOnX = 0 | PERCENT * width;
             objectsOnY = 0 | PERCENT * height;
             objectsMax = objectsOnX * objectsOnY;
@@ -31,11 +40,9 @@ const render = () => {
             }
             camera.aspect = width / height;
             camera.updateProjectionMatrix();
-            renderer.setSize(width, height, true);
+            renderer.setSize(width, height, false);
         }
-        controls.update();
         renderer.render(scene, camera);
-        console.log(camera.aspect);
     }, { throttle: FPS });
 };
 const objects = [], addObject = (x, y) => {
@@ -43,11 +50,11 @@ const objects = [], addObject = (x, y) => {
         /* transparent: true, */
         /* opacity: randomAlpha(), */
         emissive: randomColor(),
-        color: "pink",
-        roughness: 0.6,
+        color: "salmon",
+        roughness: 0.8,
         metalness: 0.2
     }));
-    mesh.position.set(x - objectsOnX / 2 + PERCENT / x, y - objectsOnY / 2 + PERCENT / y, 0 * Math.random());
+    mesh.position.set(x - objectsOnX / 2 + PERCENT / x, y - objectsOnY / 2 + PERCENT / y, 9 * Math.random());
     if (objects.push(mesh.id) <= objectsMax) {
         scene.add(mesh);
     }
@@ -58,11 +65,12 @@ const objects = [], addObject = (x, y) => {
         const object = scene.getObjectById(meshId);
         if (object === undefined)
             return;
-        /* scene.add(mesh) */
+        scene.add(mesh);
         scene.remove(object);
     }
 };
 export { render };
+controls.addEventListener('change', render);
 addEventListener("resize", () => {
     console.log("children:" + scene.children.length);
     console.log(" objects:" + objects.length);
