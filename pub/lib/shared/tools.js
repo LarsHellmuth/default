@@ -1,6 +1,6 @@
 // globals
 export const FPS = 1000 / 60, // 1000ms/60 = 60fps
-PERCENT = 0.2;
+PERCENT = 0.1;
 // performance helper
 let debouncing, throttling;
 const limit = (callback, { debounce = 0, throttle = 0 }) => {

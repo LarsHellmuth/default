@@ -39,11 +39,11 @@ const body = document.body,
           undefined, // decay
       ),
 
+      sceneX = innerWidth,
+      sceneY = innerHeight,
+      sceneZ = (innerWidth + innerHeight) / 2,
       sceneBox = new Mesh(
-          new BoxGeometry(
-              innerWidth,
-              innerHeight,
-              (innerWidth + innerHeight) / 2),
+          new BoxGeometry(sceneX, sceneY, sceneZ),
           new MeshBasicMaterial({wireframe: true}),
       ),
 
@@ -52,19 +52,19 @@ const body = document.body,
           .add(lightSpot)
           .add(lightPoint),
 
-      viewPoint = (innerWidth + innerHeight)
+      viewPoint = sceneZ * 10
 
 renderer.setPixelRatio(devicePixelRatio)
 
 lightSpot.position.set(0, 0, viewPoint)
-lightPoint.position.set(0, 0, -viewPoint)
+/* lightPoint.position.set(0, 0, -viewPoint) */
 
 camera.position.set(0, 0, viewPoint / 5)
 
 /* scene.fog = new Fog("#85de6f", camera.near, camera.far) */
 /* scene.background = new Color("#85de6f") */
 
-const z = 99, geometry = new SphereGeometry(0.5),
+const geometry = new BoxGeometry(2, 2, 9),
 
       objects:number[] = []
 
@@ -93,14 +93,14 @@ const generateObjects = (width:number, height:number):void => {
             } */
 
 
-            const positionX = x - objectsOnX / 2 /* + PERCENT / x */,
-                  positionY = y - objectsOnY / 2 /* + PERCENT / y */,
-                  positionZ = z * Math.random() - z / 2,
+            const positionX = x / PERCENT - width / 2 /* + PERCENT / x */,
+                  positionY = y / PERCENT - height / 2 /* + PERCENT / y */,
+                  positionZ = sceneZ * Math.random() - sceneZ / 2,
 
                   material = new MeshStandardMaterial({
                       color     : randomColor(),
-                      roughness : 0.2,
-                      metalness : 0.8,
+                      roughness : 0.4,
+                      metalness : 0.6,
                   }),
 
                   mesh = new Mesh(geometry, material)

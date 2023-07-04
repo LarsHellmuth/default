@@ -1,4 +1,4 @@
-import { BoxGeometry, Mesh, MeshBasicMaterial, MeshStandardMaterial, PerspectiveCamera, PointLight, Scene, SphereGeometry, SpotLight, WebGLRenderer } from "three";
+import { BoxGeometry, Mesh, MeshBasicMaterial, MeshStandardMaterial, PerspectiveCamera, PointLight, Scene, SpotLight, WebGLRenderer } from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { FPS, PERCENT, limit, randomColor } from "../shared/tools";
 const body = document.body, renderer = new WebGLRenderer({
@@ -16,17 +16,17 @@ undefined, // penumbra
 undefined), lightPoint = new PointLight(undefined, //color
 0.5, // intensity
 undefined, // distance
-undefined), sceneBox = new Mesh(new BoxGeometry(innerWidth, innerHeight, (innerWidth + innerHeight) / 2), new MeshBasicMaterial({ wireframe: true })), scene = new Scene()
+undefined), sceneX = innerWidth, sceneY = innerHeight, sceneZ = (innerWidth + innerHeight) / 2, sceneBox = new Mesh(new BoxGeometry(sceneX, sceneY, sceneZ), new MeshBasicMaterial({ wireframe: true })), scene = new Scene()
     .add(sceneBox)
     .add(lightSpot)
-    .add(lightPoint), viewPoint = (innerWidth + innerHeight);
+    .add(lightPoint), viewPoint = sceneZ * 10;
 renderer.setPixelRatio(devicePixelRatio);
 lightSpot.position.set(0, 0, viewPoint);
-lightPoint.position.set(0, 0, -viewPoint);
+/* lightPoint.position.set(0, 0, -viewPoint) */
 camera.position.set(0, 0, viewPoint / 5);
 /* scene.fog = new Fog("#85de6f", camera.near, camera.far) */
 /* scene.background = new Color("#85de6f") */
-const z = 99, geometry = new SphereGeometry(0.5), objects = [];
+const geometry = new BoxGeometry(2, 2, 9), objects = [];
 const generateObjects = (width, height) => {
     const objectsOnX = 0 | PERCENT * width, objectsOnY = 0 | PERCENT * height, objectsMax = objectsOnX * objectsOnY;
     let x = objectsOnX;
@@ -43,10 +43,10 @@ const generateObjects = (width, height) => {
 
                 scene.remove(object)
             } */
-            const positionX = x - objectsOnX / 2 /* + PERCENT / x */, positionY = y - objectsOnY / 2 /* + PERCENT / y */, positionZ = z * Math.random() - z / 2, material = new MeshStandardMaterial({
+            const positionX = x / PERCENT - width / 2 /* + PERCENT / x */, positionY = y / PERCENT - height / 2 /* + PERCENT / y */, positionZ = sceneZ * Math.random() - sceneZ / 2, material = new MeshStandardMaterial({
                 color: randomColor(),
-                roughness: 0.2,
-                metalness: 0.8,
+                roughness: 0.4,
+                metalness: 0.6,
             }), mesh = new Mesh(geometry, material);
             mesh.position.set(positionX, positionY, positionZ);
             objects.push(mesh.id);
