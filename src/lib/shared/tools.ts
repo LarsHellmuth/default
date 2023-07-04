@@ -2,19 +2,14 @@
 export const
 
     FPS = 1000 / 60, // 1000ms/60 = 60fps
-    PERCENT = 0.01
+    PERCENT = 0.2
 
 
 // performance helper
-let debouncing: number,
-    throttling: boolean
+let debouncing:number,
+    throttling:boolean
 
-const limit = (callback: TimerHandler, {
-
-    debounce = 0,
-    throttle = 0
-
-}): void => {
+const limit = (callback:TimerHandler, {debounce = 0, throttle = 0}):void => {
 
     if (throttling) return
     throttling = true
@@ -30,7 +25,7 @@ const limit = (callback: TimerHandler, {
 
 
 // random color generator
-const randomColor = (): string => {
+const randomColor = ():string => {
 
     const color = (Math.random() * (256 ** 3) | 0)
         .toString(16)
@@ -41,10 +36,10 @@ const randomColor = (): string => {
 
 
 // random alpha generator
-const randomAlpha = (min = 0.2, max = 0.8): number => {
+const randomAlpha = (min = 0.2, max = 0.8):number => {
 
-    return Math.random() * max + min
+    return (Math.random() * max - min) + min
 }
 
 
-export { limit, randomAlpha, randomColor }
+export {limit, randomAlpha, randomColor}

@@ -1,6 +1,6 @@
 // globals
 export const FPS = 1000 / 60, // 1000ms/60 = 60fps
-PERCENT = 0.01;
+PERCENT = 0.2;
 // performance helper
 let debouncing, throttling;
 const limit = (callback, { debounce = 0, throttle = 0 }) => {
@@ -22,6 +22,6 @@ const randomColor = () => {
 };
 // random alpha generator
 const randomAlpha = (min = 0.2, max = 0.8) => {
-    return Math.random() * max + min;
+    return (Math.random() * max - min) + min;
 };
 export { limit, randomAlpha, randomColor };
