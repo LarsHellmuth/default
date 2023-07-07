@@ -3,6 +3,13 @@ import {OrbitControls} from "three/addons/controls/OrbitControls.js"
 import {FPS, PERCENT, limit, randomColor} from "../shared/tools"
 
 
+let sceneX:number,
+    sceneY:number,
+    sceneZ:number,
+
+    animationRequest:boolean
+
+
 const body = document.body,
 
       renderer = new WebGLRenderer({
@@ -23,14 +30,14 @@ const body = document.body,
           9999, // far
       ),
 
-      lightSpot = new SpotLight(
+    /* lightSpot = new SpotLight(
           undefined, //color
           undefined, // intensity
           undefined, // distance
           undefined, // angle
           undefined, // penumbra
           undefined, // decay
-      ),
+      ), */
 
       lightPoint = new PointLight(
           undefined, //color
@@ -39,41 +46,41 @@ const body = document.body,
           undefined, // decay
       ),
 
-      sceneX = innerWidth,
-      sceneY = innerHeight,
-      sceneZ = (innerWidth + innerHeight) / 2,
       sceneBox = new Mesh(
-          new BoxGeometry(sceneX, sceneY, sceneZ),
+          new BoxGeometry(),
           new MeshBasicMaterial({wireframe: true}),
       ),
 
       scene = new Scene()
           .add(sceneBox)
-          .add(lightSpot)
+          /* .add(lightSpot) */
           .add(lightPoint),
 
-      viewPoint = sceneZ * 10
+      viewPoint = 2000
 
 renderer.setPixelRatio(devicePixelRatio)
 
-lightSpot.position.set(0, 0, viewPoint)
-/* lightPoint.position.set(0, 0, -viewPoint) */
+/* lightSpot.position.set(0, 0, viewPoint) */
+lightPoint.position.set(0, 0, viewPoint)
 
-camera.position.set(0, 0, viewPoint / 5)
+camera.position.set(0, 0, viewPoint)
 
 /* scene.fog = new Fog("#85de6f", camera.near, camera.far) */
 /* scene.background = new Color("#85de6f") */
 
-const geometry = new BoxGeometry(2, 2, 9),
-
-      objects:number[] = []
 
 const generateObjects = (width:number, height:number):void => {
 
-    const objectsOnX = 0 | PERCENT * width,
+    const objects:number[] = [],
+
+          objectsOnX = 0 | PERCENT * width,
           objectsOnY = 0 | PERCENT * height,
 
-          objectsMax = objectsOnX * objectsOnY
+          objectGeometry = new BoxGeometry(
+              width / objectsOnX,
+              height / objectsOnY,
+              1,
+          )
 
     let x = objectsOnX
     while (x-- > 0) {
@@ -94,8 +101,8 @@ const generateObjects = (width:number, height:number):void => {
 
 
             const positionX = x / PERCENT - width / 2 /* + PERCENT / x */,
-                  positionY = y / PERCENT - height / 2 /* + PERCENT / y */,
-                  positionZ = sceneZ * Math.random() - sceneZ / 2,
+                  positionY = y / PERCENT - height / 2/*  + PERCENT / y */,
+                  positionZ = 0 + sceneZ / 2 ?? sceneZ * Math.random() - sceneZ / 2,
 
                   material = new MeshStandardMaterial({
                       color     : randomColor(),
@@ -103,7 +110,7 @@ const generateObjects = (width:number, height:number):void => {
                       metalness : 0.6,
                   }),
 
-                  mesh = new Mesh(geometry, material)
+                  mesh = new Mesh(objectGeometry, material)
 
             mesh.position.set(positionX, positionY, positionZ)
             objects.push(mesh.id)
@@ -114,46 +121,47 @@ const generateObjects = (width:number, height:number):void => {
 }
 
 
-let animationRequest:boolean,
-
-    width:number,
-    height:number
-
-const render = ():void => limit(() =>{
+const render = ():void => {
 
     animationRequest = true
 
-    if (innerWidth !== width || innerHeight !== height) {
+    if (sceneX !== innerWidth || sceneY !== innerHeight) {
 
-        width = innerWidth
-        height = innerHeight
-
-
-        const start = performance.now()
-        generateObjects(width, height)
-        const stop = performance.now()
-        console.log(`${ (PERCENT * width) * (height * PERCENT) | 0} objects created in ${stop - start | 0}ms`)
+        sceneX = innerWidth
+        sceneY = innerHeight,
+        sceneZ = (sceneX + sceneY) / 2
 
 
-        camera.aspect = width / height
+        /* const start = performance.now() */
+
+        generateObjects(sceneX, sceneY)
+
+        /* console.log(`${performance.now() - start | 0}ms`) */
+
+
+        sceneBox.scale.set(sceneX, sceneY, sceneZ)
+
+        camera.aspect = sceneX / sceneY
         camera.updateProjectionMatrix()
 
-        renderer.setSize(width, height, false)
+        renderer.setSize(sceneX, sceneY, false)
     }
 
     controls.update()
     renderer.render(scene, camera)
 
     animationRequest = false
+}
 
-}, {throttle: FPS})
 
+const animate = ():void => {
 
-export const animate = ():void => {
-
-    if (!animationRequest) requestAnimationFrame(render)
+    if (!animationRequest) limit(() => requestAnimationFrame(render), {throttle: FPS})
 
 }; animate()
+
+
+export {animate}
 
 
 /* dev utility */
