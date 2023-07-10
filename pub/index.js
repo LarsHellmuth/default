@@ -1,1 +1,1 @@
-import "./lib/shared/dom";
+import './lib/shared/dom';

@@ -1,13 +1,6 @@
-import {BoxGeometry, Color, ConeGeometry, Fog, Mesh, MeshBasicMaterial, MeshStandardMaterial, PerspectiveCamera, PlaneGeometry, PointLight, Scene, SphereGeometry, SpotLight, WebGLRenderer} from "three"
-import {OrbitControls} from "three/addons/controls/OrbitControls.js"
-import {FPS, PERCENT, limit, randomColor} from "../shared/tools"
-
-
-let sceneX:number,
-    sceneY:number,
-    sceneZ:number,
-
-    animationRequest:boolean
+import { BoxGeometry, Color, ConeGeometry, Fog, Mesh, MeshBasicMaterial, MeshStandardMaterial, PerspectiveCamera, PlaneGeometry, PointLight, Scene, SphereGeometry, SpotLight, WebGLRenderer } from 'three'
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js'
+import { FPS, PERCENT, limit, randomColor } from '../shared/tools'
 
 
 const body = document.body,
@@ -30,43 +23,49 @@ const body = document.body,
           9999, // far
       ),
 
-    /* lightSpot = new SpotLight(
-          undefined, //color
-          undefined, // intensity
+      lightSpot = new SpotLight(
+          'red', // color
+          0.2, // intensity
           undefined, // distance
           undefined, // angle
           undefined, // penumbra
           undefined, // decay
-      ), */
+      ),
 
       lightPoint = new PointLight(
-          undefined, //color
-          0.5, // intensity
+          'blue', // color
+          0.2, // intensity
           undefined, // distance
           undefined, // decay
       ),
 
       sceneBox = new Mesh(
           new BoxGeometry(),
-          new MeshBasicMaterial({wireframe: true}),
+          new MeshBasicMaterial({ wireframe: true }),
       ),
 
       scene = new Scene()
           .add(sceneBox)
-          /* .add(lightSpot) */
+          .add(lightSpot)
           .add(lightPoint),
 
-      viewPoint = 2000
+      viewPoint = 1100
 
 renderer.setPixelRatio(devicePixelRatio)
-
-/* lightSpot.position.set(0, 0, viewPoint) */
-lightPoint.position.set(0, 0, viewPoint)
-
 camera.position.set(0, 0, viewPoint)
 
-/* scene.fog = new Fog("#85de6f", camera.near, camera.far) */
-/* scene.background = new Color("#85de6f") */
+lightSpot.position.set(-innerWidth, innerHeight, viewPoint)
+lightSpot.lookAt(0, 0, 0)
+
+lightPoint.position.set(innerWidth, -innerHeight, viewPoint)
+lightPoint.lookAt(0, 0, 0)
+
+
+let sceneX:number,
+    sceneY:number,
+    sceneZ:number,
+
+    animationRequest:boolean
 
 
 const generateObjects = (width:number, height:number):void => {
@@ -76,19 +75,21 @@ const generateObjects = (width:number, height:number):void => {
           objectsOnX = 0 | PERCENT * width,
           objectsOnY = 0 | PERCENT * height,
 
+          objectsMax = objectsOnX * objectsOnY,
+
           objectGeometry = new BoxGeometry(
-              width / objectsOnX,
-              height / objectsOnY,
-              1,
+              0.99 * width / objectsOnX,
+              0.99 * height / objectsOnY,
+              99,
           )
 
     let x = objectsOnX
-    while (x-- > 0) {
+    while (--x > 0) {
 
         let y = objectsOnY
-        while (y-- > 0) {
+        while (--y > 0) {
 
-            /* if (objects.length <= objectsMax) {
+            if (objectsMax < objects.length) {
 
                 const meshId = objects.shift()
                 if (meshId === undefined) return
@@ -97,17 +98,18 @@ const generateObjects = (width:number, height:number):void => {
                 if (object === undefined) return
 
                 scene.remove(object)
-            } */
+                scene.clear()
+            }
 
 
-            const positionX = x / PERCENT - width / 2 /* + PERCENT / x */,
-                  positionY = y / PERCENT - height / 2/*  + PERCENT / y */,
-                  positionZ = 0 + sceneZ / 2 ?? sceneZ * Math.random() - sceneZ / 2,
+            const positionX = -0.5 * objectsOnX / PERCENT + x / objectsOnX * width,
+                  positionY = -0.5 * objectsOnY / PERCENT + y / objectsOnY * height,
+                  positionZ = -sceneZ / 2 + Math.random() * 99,
 
                   material = new MeshStandardMaterial({
                       color     : randomColor(),
                       roughness : 0.4,
-                      metalness : 0.6,
+                      metalness : 0.8,
                   }),
 
                   mesh = new Mesh(objectGeometry, material)
@@ -128,7 +130,7 @@ const render = ():void => {
     if (sceneX !== innerWidth || sceneY !== innerHeight) {
 
         sceneX = innerWidth
-        sceneY = innerHeight,
+        sceneY = innerHeight
         sceneZ = (sceneX + sceneY) / 2
 
 
@@ -156,15 +158,15 @@ const render = ():void => {
 
 const animate = ():void => {
 
-    if (!animationRequest) limit(() => requestAnimationFrame(render), {throttle: FPS})
+    if (!animationRequest) limit(() => requestAnimationFrame(render), { throttle: FPS })
 
 }; animate()
 
 
-export {animate}
+export { animate }
 
 
 /* dev utility */
 const controls = new OrbitControls(camera, canvas)
 controls.enableDamping = true
-controls.addEventListener("change", animate)
+controls.addEventListener('change', animate)

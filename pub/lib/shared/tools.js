@@ -17,7 +17,7 @@ const limit = (callback, { debounce = 0, throttle = 0 }) => {
 const randomColor = () => {
     const color = (Math.random() * (256 ** 3) | 0)
         .toString(16)
-        .padStart(6, "0");
+        .padStart(6, '0');
     return `#${color}`;
 };
 // random alpha generator

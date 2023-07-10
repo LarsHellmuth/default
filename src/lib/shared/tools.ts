@@ -9,7 +9,7 @@ export const
 let debouncing:number,
     throttling:boolean
 
-const limit = (callback:TimerHandler, {debounce = 0, throttle = 0}):void => {
+const limit = (callback:TimerHandler, { debounce = 0, throttle = 0 }):void => {
 
     if (throttling) return
     throttling = true
@@ -29,7 +29,7 @@ const randomColor = ():string => {
 
     const color = (Math.random() * (256 ** 3) | 0)
         .toString(16)
-        .padStart(6, "0")
+        .padStart(6, '0')
 
     return `#${color}`
 }
@@ -42,4 +42,4 @@ const randomAlpha = (min = 0.2, max = 0.8):number => {
 }
 
 
-export {limit, randomAlpha, randomColor}
+export { limit, randomAlpha, randomColor }

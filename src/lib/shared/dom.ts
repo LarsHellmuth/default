@@ -1,7 +1,7 @@
-import {animate} from "../background/index"
+import { animate } from '../background/index'
 
 
-addEventListener("resize", animate)
+addEventListener('resize', animate)
 
 
 //  check if device is mobile or dektop
@@ -13,5 +13,5 @@ addEventListener("resize", animate)
 const html = document.documentElement;
 /Mobile|Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini|webOS/i
     .test(navigator.userAgent)
-    ? html.setAttribute("device", "mobile")
-    : html.setAttribute("device", "desktop")
+    ? html.setAttribute('device', 'mobile')
+    : html.setAttribute('device', 'desktop')
