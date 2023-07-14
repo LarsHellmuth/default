@@ -1,7 +1,8 @@
-import { animate } from '../background/index'
+import { animate, point } from '../background/index'
 
 
 addEventListener('resize', animate)
+addEventListener('mousemove', point)
 
 
 //  check if device is mobile or dektop

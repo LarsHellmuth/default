@@ -1,4 +1,4 @@
-import { BoxGeometry, Color, ConeGeometry, Fog, Mesh, MeshBasicMaterial, MeshStandardMaterial, PerspectiveCamera, PlaneGeometry, PointLight, Scene, SphereGeometry, SpotLight, WebGLRenderer } from 'three'
+import { Box3, BoxGeometry, Color, ConeGeometry, Fog, Mesh, MeshBasicMaterial, MeshStandardMaterial, PerspectiveCamera, PlaneGeometry, PointLight, Scene, SphereGeometry, SpotLight, WebGLRenderer } from 'three'
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js'
 import { FPS, PERCENT, limit, randomColor } from '../shared/tools'
 
@@ -17,25 +17,34 @@ const body = document.body,
       ),
 
       camera = new PerspectiveCamera(
-          undefined, // fov
+          50, // fov
           undefined, // aspect
           undefined, // near
-          9999, // far
+          undefined, // far
       ),
 
-      lightSpot = new SpotLight(
+      lightPoint = new PointLight(
+          'black', // color
+          undefined, // intensity
+          undefined, // distance
+          undefined, // decay
+      ),
+
+      lightSpot1 = new SpotLight(
           'red', // color
-          0.2, // intensity
+          0.1, // intensity
           undefined, // distance
           undefined, // angle
           undefined, // penumbra
           undefined, // decay
       ),
 
-      lightPoint = new PointLight(
+      lightSpot2 = new SpotLight(
           'blue', // color
-          0.2, // intensity
+          0.1, // intensity
           undefined, // distance
+          undefined, // angle
+          undefined, // penumbra
           undefined, // decay
       ),
 
@@ -44,21 +53,33 @@ const body = document.body,
           new MeshBasicMaterial({ wireframe: true }),
       ),
 
-      scene = new Scene()
-          .add(sceneBox)
-          .add(lightSpot)
-          .add(lightPoint),
+      scene = new Scene().add(sceneBox)
+          .add(lightPoint)
+          .add(lightSpot1)
+          .add(lightSpot2)
 
-      viewPoint = 1100
+
+const viewPoint = (innerWidth + innerHeight) / 2
+
 
 renderer.setPixelRatio(devicePixelRatio)
+
+lightPoint.position.set(0, 0, -viewPoint)
+lightPoint.lookAt(0, 0, 0)
+
+lightSpot1.position.set(-innerWidth, innerHeight, viewPoint)
+lightSpot1.lookAt(0, 0, 0)
+
+lightSpot2.position.set(innerWidth, -innerHeight, viewPoint)
+lightSpot2.lookAt(0, 0, 0)
+
 camera.position.set(0, 0, viewPoint)
 
-lightSpot.position.set(-innerWidth, innerHeight, viewPoint)
-lightSpot.lookAt(0, 0, 0)
 
-lightPoint.position.set(innerWidth, -innerHeight, viewPoint)
-lightPoint.lookAt(0, 0, 0)
+/* scene.fog = new Fog('green', camera.near, camera.far) */
+
+
+const objects:number[][] = []
 
 
 let sceneX:number,
@@ -68,58 +89,52 @@ let sceneX:number,
     animationRequest:boolean
 
 
-const generateObjects = (width:number, height:number):void => {
+const point = (event:MouseEvent):void => {
 
-    const objects:number[] = [],
+    /* console.log(scene.getObjectById(objects[event.clientX][event.clientY])) */
+}
+
+
+const generateObjects = (width:number, height:number, depth:number):void => {
+
+    const surface = depth * 0.0005,
 
           objectsOnX = 0 | PERCENT * width,
           objectsOnY = 0 | PERCENT * height,
 
-          objectsMax = objectsOnX * objectsOnY,
-
           objectGeometry = new BoxGeometry(
               0.99 * width / objectsOnX,
-              0.99 * height / objectsOnY,
-              99,
+              0.99 * height / objectsOnY, surface,
           )
 
     let x = objectsOnX
-    while (--x > 0) {
+    while (x-- > 0) {
 
         let y = objectsOnY
-        while (--y > 0) {
+        while (y-- > 0) {
 
-            if (objectsMax < objects.length) {
+            objects[x] = []
 
-                const meshId = objects.shift()
-                if (meshId === undefined) return
+            const mesh = new Mesh(objectGeometry.clone(), new MeshStandardMaterial({
+                color     : randomColor(),
+                roughness : 0.4,
+                metalness : 0.8,
+            }))
 
-                const object = scene.getObjectById(meshId)
-                if (object === undefined) return
-
-                scene.remove(object)
-                scene.clear()
-            }
-
-
-            const positionX = -0.5 * objectsOnX / PERCENT + x / objectsOnX * width,
-                  positionY = -0.5 * objectsOnY / PERCENT + y / objectsOnY * height,
-                  positionZ = -sceneZ / 2 + Math.random() * 99,
-
-                  material = new MeshStandardMaterial({
-                      color     : randomColor(),
-                      roughness : 0.4,
-                      metalness : 0.8,
-                  }),
-
-                  mesh = new Mesh(objectGeometry, material)
-
-            mesh.position.set(positionX, positionY, positionZ)
-            objects.push(mesh.id)
+            mesh.position.set(
+                -0.5 * width + x / objectsOnX * width,
+                -0.5 * height + y / objectsOnY * height,
+                -Math.random() * surface,
+            )
 
             scene.add(mesh)
+
+
+            objects[x][y] = mesh.id
         }
     }
+
+    console.log(objects)
 }
 
 
@@ -133,20 +148,18 @@ const render = ():void => {
         sceneY = innerHeight
         sceneZ = (sceneX + sceneY) / 2
 
-
-        /* const start = performance.now() */
-
-        generateObjects(sceneX, sceneY)
-
-        /* console.log(`${performance.now() - start | 0}ms`) */
-
-
         sceneBox.scale.set(sceneX, sceneY, sceneZ)
 
         camera.aspect = sceneX / sceneY
         camera.updateProjectionMatrix()
 
-        renderer.setSize(sceneX, sceneY, false)
+        renderer.setSize(sceneX, sceneY)
+
+        /* const start = performance.now() */
+
+        generateObjects(sceneX, sceneY, sceneZ)
+
+        /* console.log(`${performance.now() - start | 0}ms`) */
     }
 
     controls.update()
@@ -163,7 +176,7 @@ const animate = ():void => {
 }; animate()
 
 
-export { animate }
+export { animate, point }
 
 
 /* dev utility */
