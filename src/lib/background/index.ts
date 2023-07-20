@@ -79,14 +79,6 @@ camera.position.set(0, 0, viewPoint)
 /* scene.fog = new Fog('green', camera.near, camera.far) */
 
 
-const objects:number[][] = []
-
-
-let sceneX:number,
-    sceneY:number,
-    sceneZ:number,
-
-    animationRequest:boolean
 
 
 const point = (event:MouseEvent):void => {
@@ -94,6 +86,8 @@ const point = (event:MouseEvent):void => {
     /* console.log(scene.getObjectById(objects[event.clientX][event.clientY])) */
 }
 
+
+const objects:number[][] = []
 
 const generateObjects = (width:number, height:number, depth:number):void => {
 
@@ -104,16 +98,17 @@ const generateObjects = (width:number, height:number, depth:number):void => {
 
           objectGeometry = new BoxGeometry(
               0.99 * width / objectsOnX,
-              0.99 * height / objectsOnY, surface,
+              0.99 * height / objectsOnY,
+              surface,
           )
 
     let x = objectsOnX
-    while (x-- > 0) {
+    while (--x > 0) {
+
+        objects[x] = []
 
         let y = objectsOnY
-        while (y-- > 0) {
-
-            objects[x] = []
+        while (--y > 0) {
 
             const mesh = new Mesh(objectGeometry.clone(), new MeshStandardMaterial({
                 color     : randomColor(),
@@ -137,6 +132,12 @@ const generateObjects = (width:number, height:number, depth:number):void => {
     console.log(objects)
 }
 
+
+let sceneX:number,
+    sceneY:number,
+    sceneZ:number,
+
+    animationRequest:boolean
 
 const render = ():void => {
 

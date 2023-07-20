@@ -2,7 +2,7 @@
 export const
 
     FPS = 1000 / 60, // 1000ms/60 = 60fps
-    PERCENT = 0.05
+    PERCENT = 0.01
 
 
 // performance helper
@@ -17,6 +17,7 @@ const limit = (callback:TimerHandler, { debounce = 0, throttle = 0 }):void => {
     clearTimeout(debouncing)
     setTimeout(() => {
 
+        // eslint-disable-next-line @typescript-eslint/no-implied-eval
         debouncing = setTimeout(callback, debounce)
         throttling = false
 

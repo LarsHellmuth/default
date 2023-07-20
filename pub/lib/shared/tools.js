@@ -1,6 +1,6 @@
 // globals
 export const FPS = 1000 / 60, // 1000ms/60 = 60fps
-PERCENT = 0.05;
+PERCENT = 0.01;
 // performance helper
 let debouncing, throttling;
 const limit = (callback, { debounce = 0, throttle = 0 }) => {
@@ -9,6 +9,7 @@ const limit = (callback, { debounce = 0, throttle = 0 }) => {
     throttling = true;
     clearTimeout(debouncing);
     setTimeout(() => {
+        // eslint-disable-next-line @typescript-eslint/no-implied-eval
         debouncing = setTimeout(callback, debounce);
         throttling = false;
     }, throttle);

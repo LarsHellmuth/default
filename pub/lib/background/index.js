@@ -35,18 +35,17 @@ lightSpot2.position.set(innerWidth, -innerHeight, viewPoint);
 lightSpot2.lookAt(0, 0, 0);
 camera.position.set(0, 0, viewPoint);
 /* scene.fog = new Fog('green', camera.near, camera.far) */
-const objects = [];
-let sceneX, sceneY, sceneZ, animationRequest;
 const point = (event) => {
     /* console.log(scene.getObjectById(objects[event.clientX][event.clientY])) */
 };
+const objects = [];
 const generateObjects = (width, height, depth) => {
     const surface = depth * 0.0005, objectsOnX = 0 | PERCENT * width, objectsOnY = 0 | PERCENT * height, objectGeometry = new BoxGeometry(0.99 * width / objectsOnX, 0.99 * height / objectsOnY, surface);
     let x = objectsOnX;
-    while (x-- > 0) {
+    while (--x > 0) {
+        objects[x] = [];
         let y = objectsOnY;
-        while (y-- > 0) {
-            objects[x] = [];
+        while (--y > 0) {
             const mesh = new Mesh(objectGeometry.clone(), new MeshStandardMaterial({
                 color: randomColor(),
                 roughness: 0.4,
@@ -59,6 +58,7 @@ const generateObjects = (width, height, depth) => {
     }
     console.log(objects);
 };
+let sceneX, sceneY, sceneZ, animationRequest;
 const render = () => {
     animationRequest = true;
     if (sceneX !== innerWidth || sceneY !== innerHeight) {
